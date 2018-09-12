@@ -27,15 +27,16 @@ rule all:
 # Import workflows
 include: 'scripts/ensembl_grch37.Snakefile'
 
+# TODO: use proper build
 rule download_from_gcs:
     ''' Copies from gcs to tmp folder
     '''
     output:
         temp(tmpdir + '/nearest_gene/{version}/homo_sapiens_incl_consequences.vcf.gz')
     params:
-        input='gs://genetics-portal-data/homo_sapiens_incl_consequences.vcf.gz'
+        input='ftp://ftp.ensembl.org/pub/release-93/variation/vcf/homo_sapiens/homo_sapiens_incl_consequences-chr22.vcf.gz'
     shell:
-        'gsutil cp {params.input} {output}'
+        'wget -O- {params.input} > {output}'
 
 rule make_variant_index_bed:
     ''' Converts VCF to bed format. Warning this is slow ~2 hour!
